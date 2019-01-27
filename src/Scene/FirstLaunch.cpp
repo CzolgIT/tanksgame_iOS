@@ -4,16 +4,12 @@ FirstLaunch::FirstLaunch()
 {
     text[0] = new Title("Welcome to",Window::width/19);
     text[1] = new Title("TanksGame",Window::width/10);
-    
     int unitButton;
     if (Game::deviceType == DT_BIG_KEYBOARD || Game::deviceType == DT_BIG_TOUCH)
         unitButton = int( Window::height / 15 ) * 15 / 9;
     else
         unitButton = int( Window::height / 10 ) * 10 / 6;
-    
     confirm = new Button("confirm",4*unitButton,unitButton);
-    
-    
     this->animationStep = 0;
     this->timeCounter = 0;
 }
@@ -120,10 +116,8 @@ void FirstLaunch::touchEvent()
         unitButton = int( Window::height / 15 ) * 15 / 9;
     else
         unitButton = int( Window::height / 10 ) * 10 / 6;
-    
     if (event.type == SDL_FINGERDOWN)
     {
-        
         confirm->setActive(false);
         if (touchX >= Window::width/2-2*unitButton && touchX <= Window::width/2+2*unitButton
             && touchY >= Window::height/3*2-0.5*unitButton && touchY <= Window::height/3*2+0.5*unitButton)
@@ -140,7 +134,12 @@ void FirstLaunch::touchEvent()
     }
     if (event.type == SDL_FINGERUP)
     {
-        confirm->setActive(false);
+        if (confirm->isActive())
+        {
+            confirm->setActive(false);
+            SDL_Delay(10); // to show inactive button for a 10ms
+            exitScene(0);
+        }
     }
 }
 
@@ -159,7 +158,6 @@ void FirstLaunch::draw()
 {
     SDL_SetRenderDrawColor( Window::renderer, 215, 226, 175, 0xFF );
     SDL_RenderClear( Window::renderer );
-    
     if (animationStep < 3)
     {
         text[0]->draw( Window::width/2 , Window::height/7*3 );
@@ -173,6 +171,5 @@ void FirstLaunch::draw()
         if (animationStep>4)
             confirm->draw( Window::width/2 , Window::height/5*3 );
     }
-    
     SDL_RenderPresent( Window::renderer );
 }
